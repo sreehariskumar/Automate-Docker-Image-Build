@@ -73,6 +73,12 @@ To test the automation, we will make a commit to the GitHub repository containin
 
 ![7](https://user-images.githubusercontent.com/68052722/222048565-85d58eef-399d-4ec1-afc1-c431e958d58d.png)
 
+![WhatsApp Image 2023-02-24 at 7 00 54 PM (1)](https://user-images.githubusercontent.com/68052722/222048964-7820710b-c4ad-4ab5-92e4-a03f9e630c6d.jpeg)
+
+![WhatsApp Image 2023-02-24 at 6 59 44 PM](https://user-images.githubusercontent.com/68052722/222048976-63bafb15-2862-484a-9b6b-184dfb0df8d5.jpeg)
+
+
+
 
 ### Conclusion
 
