@@ -2,7 +2,6 @@
 
 ![docker-git-ansible drawio](https://user-images.githubusercontent.com/68052722/222046668-b389ea69-6f5d-457b-9bf8-49811e4125a3.png)
 
-Docker has revolutionized the way developers and system administrators build, ship, and run applications. It has become an essential tool in the DevOps toolkit, enabling teams to automate the deployment of their applications with ease. In this article, we will explore how to automate the Docker image build process on every commit on the Git repo using Ansible.
 
 In this article, we will use Ansible to automate the Docker image build process on every commit on the GitHub repo. We will use a playbook that will build a Docker image from a Flask app repository, push it to Docker Hub, and run it on a test server.
 
