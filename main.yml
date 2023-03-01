@@ -1,0 +1,128 @@
+---
+ 
+- name: "building docker image from github repo"
+  hosts: build
+  become: true
+  vars_files:
+    - dockerhub_creds.yml
+  vars: 
+    packages:
+      - git
+      - pip
+      - docker
+    repo_url: https://github.com/sreehariskumar/flask-app.git
+    clone_dir: "/var/flask_app"
+    image_name: "sreehariskumar/flask-app"
+    docker_username: sreehariskumar
+  tasks:
+ 
+    - name: "installing packages"
+      yum: 
+        name: "{{ packages }}"
+        state: present
+ 
+    - name: "adding ec2-user to docker group"
+      user:
+        user: "ec2-user"
+        groups: docker
+        append: true
+ 
+    - name: "installing python extension for docker"
+      pip:
+        name: docker-py
+ 
+    - name: "restarting & enabling docker service"
+      service:
+        name: docker
+        state: restarted
+        enabled: true
+ 
+    - name: "creating cloning directory"
+      file:
+        path: "{{ clone_dir }}"
+        state: directory
+ 
+    - name: "cloning from repo"
+      git:
+        repo: "{{ repo_url }}"
+        dest: "{{ clone_dir }}"
+      register: clone_status
+ 
+    - name: "login to docker hub"
+      when: clone_status.changed
+      docker_login:
+        username: "{{ docker_username }}"
+        password: "{{ docker_password }}"
+        state: present
+ 
+    - name: "building docker image and pushing image to dockerhub"
+      when: clone_status.changed
+      docker_image:
+        source: build
+        build:
+          path: "{{ clone_dir }}"
+          pull: yes
+        name: "{{ image_name }}"
+        tag: "{{ item }}"
+        push: true
+        force_tag: yes
+        force_source: yes
+      with_items:
+        - "{{ clone_status.after }}"
+        - latest
+ 
+    - name: "logout from dockerhub"
+      when: clone_status.changed
+      docker_login: 
+        username: "{{ docker_username }}"
+        password: "{{ docker_password }}"
+        state: absent
+ 
+- name: "running image on test server"
+  hosts: test
+  become: true
+  vars:
+    image_name: "sreehariskumar/flask-app"
+    packages:
+      - docker
+      - pip
+ 
+  tasks:
+ 
+    - name: "installing packages"
+      yum: 
+        name: "{{ packages }}"
+        state: present
+ 
+ 
+    - name: "adding ec2-user to docker group"
+      user:
+        user: "ec2-user"
+        groups: docker
+        append: true
+ 
+    - name: "installing python extension for docker"
+      pip:
+        name: docker-py
+ 
+    - name: "restarting & enabling docker service"
+      service:
+        name: docker
+        state: restarted
+        enabled: true
+ 
+    - name: "pulling docker image"
+      docker_image:
+        name: "{{ image_name }}"
+        source: pull
+        force_source: true
+      register: pull_status
+ 
+    - name: "running container"
+      when: pull_status.changed
+      docker_container:
+        name: flask-app
+        image: "{{ image_name }}:latest"
+        recreate: yes
+        pull: yes
+        published_ports: "80:5000"
