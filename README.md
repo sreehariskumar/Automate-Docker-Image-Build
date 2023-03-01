@@ -1,6 +1,6 @@
 # Automate-Docker-Image-Build (Jenkins & Ansible)
 
-![docker-git-ansible drawio](https://user-images.githubusercontent.com/68052722/222081331-d85d4bda-4cc6-41ce-acd1-1e53cc6db3a9.png)
+![docker-git-ansible drawio](https://user-images.githubusercontent.com/68052722/222089826-8d30f302-bf4e-40d1-89a7-50a6016455c7.png)
 
 
 In this article, we will use Ansible to automate the Docker image build process on every commit on the GitHub repo. We will use a playbook that will build a Docker image from a Flask app repository, push it to Docker Hub, and run it on a test server.
